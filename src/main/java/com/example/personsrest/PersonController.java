@@ -22,13 +22,7 @@ public class PersonController {
 
     @GetMapping
     public List<PersonDTO> all(){
-        //List<PersonEntity> list = personService.all().entrySet().stream().map(person -> person.getValue()).collect(Collectors.toList());
-        //System.out.println(list.size());
-
         return personService.all().stream().map(PersonController::toDTO).collect(Collectors.toList());
-        //return list.stream().map(PersonController::toDTO).collect(Collectors.toList());
-        //return personService.all().collect(Collectors.toList());
-
     }
 
     @Value

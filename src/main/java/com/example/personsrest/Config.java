@@ -23,10 +23,9 @@ public class Config {
     }
 
     @Bean
-    @Primary
     public PersonRepository personRepository() {
 
-        return new PersonService();
-        //return new PersonRepositoryImpl();
+        //return new PersonService(); //skapas redan eftersom service är annoterad med @Service
+        return new PersonRepositoryImpl();
     }
 }

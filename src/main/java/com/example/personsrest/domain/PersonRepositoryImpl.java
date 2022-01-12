@@ -2,14 +2,11 @@ package com.example.personsrest.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public class PersonRepositoryImpl implements PersonRepository {
 
    // List<PersonEntity> persons2 = new ArrayList<>();
@@ -24,9 +21,6 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public List<Person> findAll() {
-        PersonEntity person1 = new PersonEntity("Arne Anka", "test", 33, "city", false, groups);
-        save(person1);
-
         List<Person> personsList = new ArrayList<Person>(persons.values());
         return personsList;
     }
