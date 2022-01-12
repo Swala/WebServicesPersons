@@ -22,12 +22,10 @@ public class PersonEntity implements Person {
     private List<String> groups; //ska lista namn på grupper som personen tillhör
 
 
-    public PersonEntity(String testname, String test, int i, String city, boolean b, List<String> groups) {
-        this.name = testname;
-        this.age = i;
+    public PersonEntity(String name, String city, int age) {
+        this.name = name;
         this.city = city;
-        this.isActive = b;
-        this.groups = groups;
+        this.age = age;
 
     }
 

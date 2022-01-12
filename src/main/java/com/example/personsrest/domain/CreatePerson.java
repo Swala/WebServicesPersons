@@ -1,7 +1,10 @@
 package com.example.personsrest.domain;
 
-public class createPerson {
+import lombok.Value;
+
+@Value
+public class CreatePerson {
     String name;
-    int age;
     String city;
+    int age;
 }

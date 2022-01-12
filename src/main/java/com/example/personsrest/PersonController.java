@@ -1,15 +1,14 @@
 package com.example.personsrest;
 
+import com.example.personsrest.domain.CreatePerson;
 import com.example.personsrest.domain.Person;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +33,16 @@ public class PersonController {
             return ResponseEntity.notFound()
                     .build();
         }
+    }
+
+    @PostMapping
+    public PersonDTO createNewPerson(@RequestBody CreatePerson createPerson){
+        return toDTO(personService.createPerson(
+                createPerson.getName(),
+                createPerson.getCity(),
+                createPerson.getAge()
+        ));
+
     }
 
     @Value

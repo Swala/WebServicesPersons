@@ -22,8 +22,9 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public PersonEntity createPerson(){
-        PersonEntity personEntity = new PersonEntity();
+    public PersonEntity createPerson(String name, String city, int age){
+        PersonEntity personEntity = new PersonEntity(name, city, age);
+        personRepository.save(personEntity);
 
         return personEntity;
     }
