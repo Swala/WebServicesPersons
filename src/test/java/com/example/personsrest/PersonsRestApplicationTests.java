@@ -6,6 +6,7 @@ import com.example.personsrest.remote.GroupRemote;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -54,12 +55,12 @@ class PersonsRestApplicationTests {
     @Test
     void test_get_persons_success() {
         // Given
-        Person person1 = mock(Person.class);
-        when(person1.getName()).thenReturn("Arne Anka");
+        Person person1 = mock(Person.class); //en simulerad person
+        when(person1.getName()).thenReturn("Arne Anka"); //person med namn
         String groupId = UUID.randomUUID().toString();
-        when(person1.getGroups()).thenReturn(List.of(groupId));
-        when(personRepository.findAll()).thenReturn(List.of(person1));
-        when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare");
+        when(person1.getGroups()).thenReturn(List.of(groupId)); //
+        when(personRepository.findAll()).thenReturn(List.of(person1)); //ska hämta personen som skapats
+        when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare"); //gruppID tillhör Ankeborg
 
         // When
         List<PersonAPI.PersonDTO> persons = personApi.all()
