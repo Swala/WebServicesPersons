@@ -13,10 +13,10 @@ public class PersonRepositoryImpl implements PersonRepository {
     List<String> groups = new ArrayList<>();
     HashMap<String, Person> persons = new HashMap<>(); //ID om key?
 
-
     @Override
     public Optional<Person> findById(String id) {
-        return Optional.empty();
+        Optional<Person> optionalPerson =findById(id);
+        return optionalPerson;
     }
 
     @Override

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.List;
 
-
 @Service
 public class PersonService {
 
@@ -27,5 +26,12 @@ public class PersonService {
         PersonEntity personEntity = new PersonEntity();
 
         return personEntity;
+    }
+
+    public Person findPersonById(String id) throws PersonNotFoundException {
+        Optional<Person> optionalPerson = personRepository.findById(id);
+        Person person= optionalPerson.get();
+
+        return person;
     }
 }
