@@ -43,6 +43,6 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public void delete(String id) {
-
+        persons.remove(id);
     }
 }

@@ -46,4 +46,10 @@ public class PersonService {
 
         return personRepository.save(person);
     }
+
+    public void deletePerson(String id) {
+        //check findById first?
+        personRepository.delete(id);
+
+    }
 }

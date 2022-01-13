@@ -59,6 +59,12 @@ public class PersonController {
         }
     }
 
+    @DeleteMapping("{id}")
+    public void deletePerson(@PathVariable("id") String id){
+            personService.deletePerson(id);
+
+    }
+
     @Value
     static class PersonDTO {
         String id;
