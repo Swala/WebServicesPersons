@@ -30,9 +30,20 @@ public class PersonService {
     }
 
     public Person findPersonById(String id) throws PersonNotFoundException {
-        Optional<Person> optionalPerson = personRepository.findById(id);
-        Person person= optionalPerson.get();
+        Optional<Person> optionalPerson = Optional.ofNullable(personRepository.findById(id).orElseThrow(
+                () -> new PersonNotFoundException(id)));
+
+        Person person = optionalPerson.get();
 
         return person;
+    }
+
+    public Person updatePerson(String id, String name, String city, int age) throws PersonNotFoundException {
+        Person person = findPersonById(id);
+        person.setName(name);
+        person.setCity(city);
+        person.setAge(age);
+
+        return personRepository.save(person);
     }
 }
