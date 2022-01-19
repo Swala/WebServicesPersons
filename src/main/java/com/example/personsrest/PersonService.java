@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class PersonService {
@@ -62,10 +63,6 @@ public class PersonService {
     }
 
     public Person addGroup(String personId, String groupName) throws PersonNotFoundException {
-        //lägg till grupper på hittat person, ska hämtas från remote API? JWT behövs
-        //https://groups.edu.sensera.se/webjars/swagger-ui/index.html#/group-controller
-
-
         //hitta personen som man ska lägga till en grupp på
         Person foundPerson = findPersonById(personId);
 
@@ -73,13 +70,9 @@ public class PersonService {
         String groupId = groupRemote.createGroup(groupName);
 
         //spara gruppen i personens gruppLista
-        String groupNameFromRemote = groupRemote.getNameById(groupId);
-        System.out.println("from personService " + groupNameFromRemote);
         foundPerson.addGroup(groupId);
-        //foundPerson.addGroup(groupRemote.getNameById(groupId)); //ska det sparas gruppID eller gruppNamn??
 
         return personRepository.save(foundPerson);
-
     }
 
     public Page<Person> findAllByNameOrCityContaining(String search, int pageNumber, int pageSize) { //removed String name, String city,
@@ -91,13 +84,22 @@ public class PersonService {
 
     }
 
-    public void removeGroup(String id, String groupName) throws PersonNotFoundException {
+    public Person removeGroup(String id, String groupName) throws PersonNotFoundException {
         //find person with id
-       Person person = findPersonById(id);
+        Person person = findPersonById(id);
 
+        //get groupID from? using groupName
+        for (String groupID : person.getGroups()){
+            System.out.println(groupID);
+            person.removeGroup(groupID); //grönt test men här skulle alla grupper tas bort men check returnerar null
 
-        //remove the group by groupName
+            /*
+            if(groupName.equals(groupRemote.getNameById(groupID))){
+                person.removeGroup(groupID);
+            };*/
+        };
 
+        return personRepository.save(person);
 
     }
 }

@@ -39,6 +39,6 @@ public class PersonEntity implements Person {
 
     @Override
     public void removeGroup(String groupId) {
-
+        groups.remove(groupId);
     }
 }

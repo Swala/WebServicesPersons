@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class PersonController {
 
     PersonService personService;
-    GroupRemote groupRemote;
+    GroupRemote groupRemote; //vill inte ha detta här...
 
     @GetMapping()
     public List<PersonDTO> all(@RequestParam(required = false) String search){
@@ -51,7 +51,7 @@ public class PersonController {
     }
 
     @PostMapping
-    public PersonDTO createNewPerson(@RequestBody CreatePerson createPerson){
+    public PersonDTO createNewPerson(@RequestBody CreatePerson createPerson){ //change to ResponseEntity
         return toDTO(personService.createPerson(
                 createPerson.getName(),
                 createPerson.getCity(),
@@ -80,26 +80,7 @@ public class PersonController {
 
     }
 
-    /*
-    @GetMapping ("search")  // "{search} optional path variable?
-    public List<PersonDTO> findAllByNameOrCityContaining( //
-            @RequestParam(name = "search") String search,
-            @RequestParam(name = "pageNumber")int pageNumber,
-            @RequestParam(name = "pageSize") int pageSize){
-
-            //System.out.println("controller " + pageRequest.getPageNumber());
-            System.out.println(search);
-
-            //Page<Person> list = personService.findAllByNameOrCityContaining(name.get(), city.get(), pageRequest); //vad behövs skickas med här?
-            //Page<Person> list = personService.findAllByNameOrCityContaining(pageable);
-
-            return personService.findAllByNameOrCityContaining(search, pageNumber, pageSize)
-                    .map(this::toDTO).stream().collect(Collectors.toList());
-
-    }*/
-
-
-    @PutMapping("/{id}/addGroup/{groupName}") //enligt beskrivning ska groupname inte vara med?
+    @PutMapping("/{id}/addGroup/{groupName}")
     public ResponseEntity<PersonDTO> addGroup(@PathVariable("id") String id,@PathVariable("groupName") String groupName){
         try{
             return ResponseEntity.ok(toDTO(personService.addGroup(id, groupName))); //måste ändra getGroups, via GroupRemote?
@@ -109,9 +90,17 @@ public class PersonController {
         }
     }
 
-    @GetMapping("/{id}/removeGroup/{groupName}")
-    public void removeGroupFromPerson(@PathVariable("id") String id, @PathVariable("groupName") String groupName) throws PersonNotFoundException {
-        personService.removeGroup(id, groupName);
+    @DeleteMapping("/{id}/removeGroup/{groupName}")
+    public ResponseEntity<PersonDTO> removeGroupFromPerson(@PathVariable("id") String id, @PathVariable("groupName") String groupName) throws PersonNotFoundException {
+        try{
+            //hämta groupID härifrån och skicka med till service?
+            return ResponseEntity.ok(toDTO(personService.removeGroup(id, groupName))); //måste ändra getGroups, via GroupRemote?
+
+        }catch (PersonNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+
+        //Inte klar, Error: wanted but Not invoked?
 
     }
 

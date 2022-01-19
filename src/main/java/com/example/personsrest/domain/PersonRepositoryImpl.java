@@ -33,14 +33,7 @@ public class PersonRepositoryImpl implements PersonRepository {
                 .filter(entry -> entry.getName().contains(name) || entry.getCity().contains(city))
                 .collect(Collectors.toList());
 
-        System.out.println(personList.size());
 
-        for(Person p : personList){
-            System.out.println(p.getName());
-        }
-
-
-        //Page<Person> page = new PageImpl<>(personList, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort()), personList.size());
         Page<Person> page = new PageImpl<>(personList, pageable, pageable.getPageNumber());
 
         return page;
