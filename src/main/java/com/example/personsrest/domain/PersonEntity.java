@@ -15,8 +15,6 @@ import java.util.UUID;
 @Setter
 public class PersonEntity implements Person {
 
-    //GroupRemote groupRemote;
-
     private String id = UUID.randomUUID().toString();
     private String name;
     private int age;

@@ -31,11 +31,10 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public PersonEntity createPerson(String name, String city, int age){
+    public Person createPerson(String name, String city, int age){
         PersonEntity personEntity = new PersonEntity(name, city, age);
-        personRepository.save(personEntity);
 
-        return personEntity;
+        return personRepository.save(personEntity);
     }
 
     public Person findPersonById(String id) throws PersonNotFoundException {
@@ -77,8 +76,8 @@ public class PersonService {
         //spara gruppen i personens gruppLista
         String groupNameFromRemote = groupRemote.getNameById(groupId);
         System.out.println("from personService " + groupNameFromRemote);
-        //foundPerson.addGroup(groupId);
-        foundPerson.addGroup(groupRemote.getNameById(groupId)); //ska det sparas gruppID eller gruppNamn??
+        foundPerson.addGroup(groupId);
+        //foundPerson.addGroup(groupRemote.getNameById(groupId)); //ska det sparas gruppID eller gruppNamn??
 
         return personRepository.save(foundPerson);
 

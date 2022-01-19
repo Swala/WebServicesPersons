@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 public class PersonController {
 
     PersonService personService;
-    //static GroupRemote groupRemote;
+    GroupRemote groupRemote;
 
     @GetMapping("/")
     public List<PersonDTO> all(){
         System.out.println("hej från All-metoden");
-        return personService.all().stream().map(PersonController::toDTO).collect(Collectors.toList());
+        return personService.all().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -85,7 +85,7 @@ public class PersonController {
             //Page<Person> list = personService.findAllByNameOrCityContaining(pageable);
 
             return personService.findAllByNameOrCityContaining(search, pageNumber, pageSize)
-                    .map(PersonController::toDTO).stream().collect(Collectors.toList());
+                    .map(this::toDTO).stream().collect(Collectors.toList());
 
     }
 
@@ -95,10 +95,11 @@ public class PersonController {
                                             @PathVariable("groupName") String groupName){
 
         try{
+            /*
             Person test = (personService.addGroup(id, groupName));
             for (String group : test.getGroups()){
                 System.out.println(personService.groupRemote.getNameById(group));
-            }
+            }*/
             //test.getGroups().stream().map(groupId -> personService.groupRemote.getNameById(groupId));
 
             return ResponseEntity.ok(toDTO(personService.addGroup(id, groupName))); //måste ändra getGroups, via GroupRemote?
@@ -110,7 +111,7 @@ public class PersonController {
     }
 
     @Value
-    static class PersonDTO {
+    class PersonDTO {
         String id;
         String name;
         String city;
@@ -133,13 +134,13 @@ public class PersonController {
 
     }
 
-    public static PersonDTO toDTO(Person person){
+    public PersonDTO toDTO(Person person){
         return new PersonDTO(
                 person.getId(),
                 person.getName(),
                 person.getCity(),
                 person.getAge(),
-                person.getGroups() //.stream().map(id -> groupRemote.getNameById(id)).collect(Collectors.toList())
+                person.getGroups().stream().map(id -> groupRemote.getNameById(id)).collect(Collectors.toList())
         );
 
 
