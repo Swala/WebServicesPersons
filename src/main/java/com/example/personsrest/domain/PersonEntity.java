@@ -1,5 +1,6 @@
 package com.example.personsrest.domain;
 
+import com.example.personsrest.remote.GroupRemote;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class PersonEntity implements Person {
+
+    //GroupRemote groupRemote;
 
     private String id = UUID.randomUUID().toString();
     private String name;
@@ -30,8 +33,10 @@ public class PersonEntity implements Person {
     }
 
     @Override
-    public void addGroup(String groupId) {
+    public void addGroup(String groupId) { //borde väl vara groupName?
+        //groups.add(groupRemote.getNameById(groupId));
 
+        groups.add(groupId);
     }
 
     @Override

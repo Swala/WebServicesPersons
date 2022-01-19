@@ -2,15 +2,20 @@ package com.example.personsrest;
 
 import com.example.personsrest.domain.CreatePerson;
 import com.example.personsrest.domain.Person;
+import com.example.personsrest.domain.PersonEntity;
 import com.example.personsrest.domain.UpdatePerson;
+import com.example.personsrest.remote.GroupRemote;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -19,9 +24,11 @@ import java.util.stream.Collectors;
 public class PersonController {
 
     PersonService personService;
+    //static GroupRemote groupRemote;
 
-    @GetMapping
+    @GetMapping("/")
     public List<PersonDTO> all(){
+        System.out.println("hej från All-metoden");
         return personService.all().stream().map(PersonController::toDTO).collect(Collectors.toList());
     }
 
@@ -59,9 +66,46 @@ public class PersonController {
         }
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deletePerson(@PathVariable("id") String id){
             personService.deletePerson(id);
+
+    }
+
+    @GetMapping ("search")  // "{search} optional path variable?
+    public List<PersonDTO> findAllByNameOrCityContaining( //
+            @RequestParam(name = "search") String search,
+            @RequestParam(name = "pageNumber")int pageNumber,
+            @RequestParam(name = "pageSize") int pageSize){
+
+            //System.out.println("controller " + pageRequest.getPageNumber());
+            System.out.println(search);
+
+            //Page<Person> list = personService.findAllByNameOrCityContaining(name.get(), city.get(), pageRequest); //vad behövs skickas med här?
+            //Page<Person> list = personService.findAllByNameOrCityContaining(pageable);
+
+            return personService.findAllByNameOrCityContaining(search, pageNumber, pageSize)
+                    .map(PersonController::toDTO).stream().collect(Collectors.toList());
+
+    }
+
+
+    @PutMapping("/{id}/addGroup/{groupName}") //enligt beskrivning ska groupname inte vara med?
+    public ResponseEntity<PersonDTO> addGroup(@PathVariable("id") String id,
+                                            @PathVariable("groupName") String groupName){
+
+        try{
+            Person test = (personService.addGroup(id, groupName));
+            for (String group : test.getGroups()){
+                System.out.println(personService.groupRemote.getNameById(group));
+            }
+            //test.getGroups().stream().map(groupId -> personService.groupRemote.getNameById(groupId));
+
+            return ResponseEntity.ok(toDTO(personService.addGroup(id, groupName))); //måste ändra getGroups, via GroupRemote?
+
+        }catch (PersonNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
 
     }
 
@@ -95,7 +139,7 @@ public class PersonController {
                 person.getName(),
                 person.getCity(),
                 person.getAge(),
-                person.getGroups()
+                person.getGroups() //.stream().map(id -> groupRemote.getNameById(id)).collect(Collectors.toList())
         );
 
 

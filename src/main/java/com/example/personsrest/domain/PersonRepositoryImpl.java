@@ -1,16 +1,15 @@
 package com.example.personsrest.domain;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PersonRepositoryImpl implements PersonRepository {
 
-   // List<PersonEntity> persons2 = new ArrayList<>();
-    List<String> groups = new ArrayList<>();
     HashMap<String, Person> persons = new HashMap<>(); //ID om key?
 
     @Override
@@ -27,7 +26,24 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Page<Person> findAllByNameContainingOrCityContaining(String name, String city, Pageable pageable) {
-        return null;
+
+        System.out.println(persons.size());
+        List<Person>personList = findAll()
+                .stream()
+                .filter(entry -> entry.getName().contains(name) || entry.getCity().contains(city))
+                .collect(Collectors.toList());
+
+        System.out.println(personList.size());
+
+        for(Person p : personList){
+            System.out.println(p.getName());
+        }
+
+
+        //Page<Person> page = new PageImpl<>(personList, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort()), personList.size());
+        Page<Person> page = new PageImpl<>(personList, pageable, pageable.getPageNumber());
+
+        return page;
     }
 
     @Override

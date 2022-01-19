@@ -149,7 +149,7 @@ class PersonsRestApplicationTests {
         String groupId = UUID.randomUUID().toString();
         String personId = UUID.randomUUID().toString();
         Person person = mock(Person.class);
-        Person person2 = mock(Person.class);
+        Person person2 = mock(Person.class); //varför 2 persons?
         when(person2.getGroups()).thenReturn(List.of(groupId));
         when(personRepository.findById(eq(personId))).thenReturn(Optional.of(person));
         when(personRepository.save(eq(person))).thenReturn(person2);
