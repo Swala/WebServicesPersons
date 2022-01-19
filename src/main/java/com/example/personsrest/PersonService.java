@@ -5,6 +5,9 @@ import com.example.personsrest.domain.PersonEntity;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.List;
@@ -79,22 +82,12 @@ public class PersonService {
 
     }
 
-    public Page<Person> findAllByNameOrCityContaining(String search, int PageNumber, int pageSize) { //removed String name, String city,
+    public Page<Person> findAllByNameOrCityContaining(String search, int pageNumber, int pageSize) { //removed String name, String city,
 
-        List<Person>personList = personRepository.findAll()
-                .stream()
-                .filter(entry -> entry.getName().contains(search) || entry.getCity().contains(search))
-                .collect(Collectors.toList());
+        Pageable page = PageRequest.of(pageNumber, pageSize);
+        Page<Person> pagedResult = personRepository.findAllByNameContainingOrCityContaining(search, search, page);
 
-        for(Person p : personList){
-            System.out.println(p.getName());
-        }
-        //Page<Person> pagedResult = personRepository.findAllByNameContainingOrCityContaining(name, city, pageable);
-
-
-        //return personRepository.findAllByNameContainingOrCityContaining("", "", pageable);
-
-        return null;
+        return pagedResult;
 
     }
 

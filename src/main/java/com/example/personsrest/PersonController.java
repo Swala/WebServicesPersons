@@ -26,10 +26,18 @@ public class PersonController {
     PersonService personService;
     GroupRemote groupRemote;
 
-    @GetMapping("/")
-    public List<PersonDTO> all(){ //använd denna till filtrera
-        System.out.println("hej från All-metoden");
-        return personService.all().stream().map(this::toDTO).collect(Collectors.toList());
+    @GetMapping()
+    public List<PersonDTO> all(@RequestParam(required = false) String search){
+
+        //System.out.println("hej från All-metoden");
+        if(search != null) {
+            System.out.println(search);
+            return personService.findAllByNameOrCityContaining(search, 0, 10)
+                    .map(this::toDTO).stream().collect(Collectors.toList());
+        }else {
+
+            return personService.all().stream().map(this::toDTO).collect(Collectors.toList());
+        }
     }
 
     @GetMapping("/{id}")
@@ -72,6 +80,7 @@ public class PersonController {
 
     }
 
+    /*
     @GetMapping ("search")  // "{search} optional path variable?
     public List<PersonDTO> findAllByNameOrCityContaining( //
             @RequestParam(name = "search") String search,
@@ -87,27 +96,17 @@ public class PersonController {
             return personService.findAllByNameOrCityContaining(search, pageNumber, pageSize)
                     .map(this::toDTO).stream().collect(Collectors.toList());
 
-    }
+    }*/
 
 
     @PutMapping("/{id}/addGroup/{groupName}") //enligt beskrivning ska groupname inte vara med?
-    public ResponseEntity<PersonDTO> addGroup(@PathVariable("id") String id,
-                                            @PathVariable("groupName") String groupName){
-
+    public ResponseEntity<PersonDTO> addGroup(@PathVariable("id") String id,@PathVariable("groupName") String groupName){
         try{
-            /*
-            Person test = (personService.addGroup(id, groupName));
-            for (String group : test.getGroups()){
-                System.out.println(personService.groupRemote.getNameById(group));
-            }*/
-            //test.getGroups().stream().map(groupId -> personService.groupRemote.getNameById(groupId));
-
             return ResponseEntity.ok(toDTO(personService.addGroup(id, groupName))); //måste ändra getGroups, via GroupRemote?
 
         }catch (PersonNotFoundException e){
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @GetMapping("/{id}/removeGroup/{groupName}")
