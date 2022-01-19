@@ -5,9 +5,6 @@ import com.example.personsrest.domain.PersonEntity;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.List;
@@ -67,8 +64,7 @@ public class PersonService {
 
 
         //hitta personen som man ska lägga till en grupp på
-        Optional<Person> person = personRepository.findById(personId);
-        Person foundPerson = person.get();
+        Person foundPerson = findPersonById(personId);
 
         //skapa grupp med groupName, returnerar ID?
         String groupId = groupRemote.createGroup(groupName);
@@ -85,7 +81,6 @@ public class PersonService {
 
     public Page<Person> findAllByNameOrCityContaining(String search, int PageNumber, int pageSize) { //removed String name, String city,
 
-
         List<Person>personList = personRepository.findAll()
                 .stream()
                 .filter(entry -> entry.getName().contains(search) || entry.getCity().contains(search))
@@ -100,6 +95,16 @@ public class PersonService {
         //return personRepository.findAllByNameContainingOrCityContaining("", "", pageable);
 
         return null;
+
+    }
+
+    public void removeGroup(String id, String groupName) throws PersonNotFoundException {
+        //find person with id
+       Person person = findPersonById(id);
+
+
+        //remove the group by groupName
+
 
     }
 }

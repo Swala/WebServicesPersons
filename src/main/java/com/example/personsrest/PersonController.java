@@ -27,7 +27,7 @@ public class PersonController {
     GroupRemote groupRemote;
 
     @GetMapping("/")
-    public List<PersonDTO> all(){
+    public List<PersonDTO> all(){ //använd denna till filtrera
         System.out.println("hej från All-metoden");
         return personService.all().stream().map(this::toDTO).collect(Collectors.toList());
     }
@@ -107,6 +107,12 @@ public class PersonController {
         }catch (PersonNotFoundException e){
             return ResponseEntity.notFound().build();
         }
+
+    }
+
+    @GetMapping("/{id}/removeGroup/{groupName}")
+    public void removeGroupFromPerson(@PathVariable("id") String id, @PathVariable("groupName") String groupName) throws PersonNotFoundException {
+        personService.removeGroup(id, groupName);
 
     }
 
