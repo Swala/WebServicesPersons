@@ -64,13 +64,14 @@ public class PersonService {
     public Person addGroup(String personId, String groupName) throws PersonNotFoundException {
         //hitta personen som man ska lägga till en grupp på
         Person foundPerson = findPersonById(personId);
-        System.out.println("PersonService " + foundPerson.getName());
+        //System.out.println("PersonService " + foundPerson.getName()); //ok
 
         //skapa grupp med groupName, returnerar ID?
         String groupId = groupRemote.createGroup(groupName);
+        //System.out.println("PersonService " + groupRemote.getNameById(groupId)); //ok
 
         //spara gruppen i personens gruppLista
-        foundPerson.addGroup(groupId);
+        foundPerson.addGroup(groupId); // det är ID som ska sparas i listan
 
         return personRepository.save(foundPerson);
     }
