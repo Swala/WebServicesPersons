@@ -14,7 +14,7 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Optional<Person> findById(String id) {
-        Optional<Person> optionalPerson =findById(id);
+        Optional<Person> optionalPerson = Optional.ofNullable(persons.get(id));
         return optionalPerson;
     }
 

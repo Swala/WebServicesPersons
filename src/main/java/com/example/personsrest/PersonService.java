@@ -5,14 +5,11 @@ import com.example.personsrest.domain.PersonEntity;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PersonService {
@@ -32,8 +29,10 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public Person createPerson(String name, String city, int age){
+    public Person createPerson(String name, String city, int age){ //groups??
         PersonEntity personEntity = new PersonEntity(name, city, age);
+        //addGroups?
+        //System.out.println("personService create: " + name);
 
         return personRepository.save(personEntity);
     }
@@ -65,6 +64,7 @@ public class PersonService {
     public Person addGroup(String personId, String groupName) throws PersonNotFoundException {
         //hitta personen som man ska lägga till en grupp på
         Person foundPerson = findPersonById(personId);
+        System.out.println("PersonService " + foundPerson.getName());
 
         //skapa grupp med groupName, returnerar ID?
         String groupId = groupRemote.createGroup(groupName);

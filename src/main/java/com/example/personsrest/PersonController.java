@@ -14,9 +14,12 @@ import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -51,12 +54,13 @@ public class PersonController {
     }
 
     @PostMapping
-    public PersonDTO createNewPerson(@RequestBody CreatePerson createPerson){ //change to ResponseEntity
-        return toDTO(personService.createPerson(
+    public ResponseEntity<PersonDTO> createNewPerson(@RequestBody CreatePerson createPerson){ //change to ResponseEntity?
+        //System.out.println(createPerson.getName());
+        return ResponseEntity.ok(toDTO(personService.createPerson(
                 createPerson.getName(),
                 createPerson.getCity(),
                 createPerson.getAge()
-        ));
+        )));
 
     }
 
@@ -83,7 +87,8 @@ public class PersonController {
     @PutMapping("/{id}/addGroup/{groupName}")
     public ResponseEntity<PersonDTO> addGroup(@PathVariable("id") String id,@PathVariable("groupName") String groupName){
         try{
-            return ResponseEntity.ok(toDTO(personService.addGroup(id, groupName))); //måste ändra getGroups, via GroupRemote?
+            //System.out.println("from controller" + groupName);
+            return ResponseEntity.ok(toDTO(personService.addGroup(id, groupName)));
 
         }catch (PersonNotFoundException e){
             return ResponseEntity.notFound().build();
@@ -134,8 +139,10 @@ public class PersonController {
                 person.getName(),
                 person.getCity(),
                 person.getAge(),
-                person.getGroups().stream().map(id -> groupRemote.getNameById(id)).collect(Collectors.toList())
+                person.getGroups().stream().map(id ->  groupRemote.getNameById(id)).collect(Collectors.toList())//handle null exeption
+
         );
+
 
 
     }

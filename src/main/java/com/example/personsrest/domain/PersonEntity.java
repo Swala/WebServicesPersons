@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,8 +28,10 @@ public class PersonEntity implements Person {
         this.name = name;
         this.city = city;
         this.age = age;
+        this.groups = new ArrayList<>();
 
     }
+
 
     @Override
     public void addGroup(String groupId) { //borde väl vara groupName?
