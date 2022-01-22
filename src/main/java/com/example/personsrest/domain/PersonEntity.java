@@ -34,8 +34,8 @@ public class PersonEntity implements Person {
 
 
     @Override
-    public void addGroup(String groupId) { //borde väl vara groupName?
-        //groups.add(groupRemote.getNameById(groupId));
+    public void addGroup(String groupId) {
+        System.out.println("addGroup " + groupId);
 
         groups.add(groupId);
     }

@@ -8,4 +8,5 @@ public interface GroupRemote {
     String createGroup(String name);
 
     String removeGroup(String name);
+
 }

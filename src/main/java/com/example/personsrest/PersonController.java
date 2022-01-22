@@ -95,17 +95,14 @@ public class PersonController {
         }
     }
 
-    @DeleteMapping("/{id}/removeGroup/{groupName}")
-    public ResponseEntity<PersonDTO> removeGroupFromPerson(@PathVariable("id") String id, @PathVariable("groupName") String groupName) throws PersonNotFoundException {
+    @DeleteMapping("/{id}/removeGroup/{groupId}") //ändrat från groupname till id
+    public ResponseEntity<PersonDTO> removeGroupFromPerson(@PathVariable("id") String id, @PathVariable("groupId") String groupId) throws PersonNotFoundException {
         try{
-            //hämta groupID härifrån och skicka med till service?
-            return ResponseEntity.ok(toDTO(personService.removeGroup(id, groupName))); //måste ändra getGroups, via GroupRemote?
+            return ResponseEntity.ok(toDTO(personService.removeGroup(id, groupId))); //måste ändra getGroups, via GroupRemote?
 
         }catch (PersonNotFoundException e){
             return ResponseEntity.notFound().build();
         }
-
-        //Inte klar, Error: wanted but Not invoked?
 
     }
 

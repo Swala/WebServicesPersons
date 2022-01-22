@@ -57,6 +57,7 @@ public class GroupRemoteImpl implements GroupRemote{
     @Override
     public String getNameById(String groupId) { //Group object innehåller id och name
         //annvänd groupId för att hitta och returnera name
+        //System.out.println("groupImpl " + groupId);
         Group group = get(groupId);
         return group.getName();
     }
@@ -71,9 +72,12 @@ public class GroupRemoteImpl implements GroupRemote{
     }
 
     @Override
-    public String removeGroup(String name) {
+    public String removeGroup(String name) { //ska denna returnera ID??
+
         return null;
     }
+
+
 
     @Value
     public static class Group {
