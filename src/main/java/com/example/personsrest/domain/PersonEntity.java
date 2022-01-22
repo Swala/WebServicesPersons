@@ -42,6 +42,8 @@ public class PersonEntity implements Person {
 
     @Override
     public void removeGroup(String groupId) {
+        System.out.println("from PersonEntity " + groupId);
+
         groups.remove(groupId);
     }
 }

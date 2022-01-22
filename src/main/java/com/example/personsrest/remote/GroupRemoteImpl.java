@@ -30,7 +30,7 @@ public class GroupRemoteImpl implements GroupRemote{
 
 
     public Group get(String id) {
-        System.out.println("from get in groupremote " + id); //ska vara id, inte namn
+        //System.out.println("from get in groupremote " + id); //ska vara id, inte namn
         return webClient.get().uri(BASE_URL + "/"+id)
                 .header("Authorization", "Bearer " + token.accessToken)
                 .header(HttpHeaders.CONTENT_TYPE , MediaType.APPLICATION_JSON_VALUE)
@@ -63,7 +63,6 @@ public class GroupRemoteImpl implements GroupRemote{
 
     @Override
     public String createGroup(String name) {
-
         Group group = create(new CreateGroup(name));
         groups.put(group.getId(), group);
         //System.out.println("from groupRemote " + group.getName());

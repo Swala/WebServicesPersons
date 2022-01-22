@@ -61,21 +61,6 @@ public class PersonService {
 
     }
 
-    public Person addGroup(String personId, String groupName) throws PersonNotFoundException {
-        //hitta personen som man ska lägga till en grupp på
-        Person foundPerson = findPersonById(personId);
-        //System.out.println("PersonService " + foundPerson.getName()); //ok
-
-        //skapa grupp med groupName, returnerar ID?
-        String groupId = groupRemote.createGroup(groupName);
-        //System.out.println("PersonService " + groupRemote.getNameById(groupId)); //ok
-
-        //spara gruppen i personens gruppLista
-        foundPerson.addGroup(groupId); // det är ID som ska sparas i listan
-
-        return personRepository.save(foundPerson);
-    }
-
     public Page<Person> findAllByNameOrCityContaining(String search, int pageNumber, int pageSize) { //removed String name, String city,
 
         Pageable page = PageRequest.of(pageNumber, pageSize);
@@ -85,22 +70,38 @@ public class PersonService {
 
     }
 
+    public Person addGroup(String personId, String groupName) throws PersonNotFoundException {
+        //hitta personen som man ska lägga till en grupp på
+        Person foundPerson = findPersonById(personId);
+
+        //skapa grupp med groupName, returnerar ID?
+        String groupId = groupRemote.createGroup(groupName);
+
+        //spara gruppen i personens gruppLista
+        foundPerson.addGroup(groupId); // det är ID som ska sparas i listan
+
+        return personRepository.save(foundPerson);
+    }
+
+
     public Person removeGroup(String id, String groupName) throws PersonNotFoundException {
         //find person with id
-        Person person = findPersonById(id);
+        Person foundPerson = findPersonById(id);
+        System.out.println("PersonService " + foundPerson.getName());
 
-        //get groupID from? using groupName
-        for (String groupID : person.getGroups()){
-            System.out.println(groupID);
-            person.removeGroup(groupID); //grönt test men här skulle alla grupper tas bort men check returnerar null
+        //if groupName equals a group in foundPersons goupList, remove it
+        for (String groupID : foundPerson.getGroups()){
+            System.out.println("ID: " + groupID);
+            System.out.println("groupName: " + groupRemote.getNameById(groupID));
+            //foundPerson.removeGroup(groupID); //grönt test men här skulle alla grupper tas bort men check returnerar null
 
-            /*
-            if(groupName.equals(groupRemote.getNameById(groupID))){
-                person.removeGroup(groupID);
-            };*/
+            if(groupRemote.getNameById(groupID).equals(groupName)){
+                foundPerson.removeGroup(groupID);
+                return personRepository.save(foundPerson);
+            };
         };
 
-        return personRepository.save(person);
+        return foundPerson;
 
     }
 }
