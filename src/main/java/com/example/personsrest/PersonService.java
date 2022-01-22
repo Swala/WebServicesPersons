@@ -24,26 +24,19 @@ public class PersonService {
     }
 
     public List<Person> all(){
-        //PersonEntity person1 = new PersonEntity("Test Namn", "test", 33, "city", false, groups);
-        //save(person1);
         return personRepository.findAll();
     }
 
-    public Person createPerson(String name, String city, int age){ //groups??
+    public Person createPerson(String name, String city, int age){
         PersonEntity personEntity = new PersonEntity(name, city, age);
-        //addGroups?
-        //System.out.println("personService create: " + name);
-
         return personRepository.save(personEntity);
     }
 
-    public Person findPersonById(String id) throws PersonNotFoundException {
+    public Person findPersonById(String id) throws PersonNotFoundException { //or will Optional throw exception for me??
         Optional<Person> optionalPerson = Optional.ofNullable(personRepository.findById(id).orElseThrow(
                 () -> new PersonNotFoundException(id)));
 
-        Person person = optionalPerson.get();
-
-        return person;
+        return optionalPerson.get();
     }
 
     public Person updatePerson(String id, String name, String city, int age) throws PersonNotFoundException {
@@ -61,22 +54,18 @@ public class PersonService {
 
     }
 
-    public Page<Person> findAllByNameOrCityContaining(String search, int pageNumber, int pageSize) { //removed String name, String city,
+    public Page<Person> findAllByNameOrCityContaining(String search, int pageNumber, int pageSize) {
 
         Pageable page = PageRequest.of(pageNumber, pageSize);
-        Page<Person> pagedResult = personRepository.findAllByNameContainingOrCityContaining(search, search, page);
-
-        return pagedResult;
-
+        return personRepository.findAllByNameContainingOrCityContaining(search, search, page); //dont know if search is by city or name
     }
 
     public Person addGroup(String personId, String groupName) throws PersonNotFoundException {
         //hitta personen som man ska lägga till en grupp på
         Person foundPerson = findPersonById(personId);
 
-        //skapa grupp med groupName, returnerar ID?
+        //skapa grupp med groupName
         String groupId = groupRemote.createGroup(groupName);
-        //String groupId = groupRemote.removeGroup(groupName); //returns the id
 
         //spara gruppen i personens gruppLista
         foundPerson.addGroup(groupId); // det är ID som ska sparas i listan
@@ -86,15 +75,11 @@ public class PersonService {
 
 
     public Person removeGroup(String id, String groupId) throws PersonNotFoundException {
-        //find person with id
-        Person foundPerson = findPersonById(id);
-        System.out.println("PersonService " + foundPerson.getGroups().get(0));
 
+        Person foundPerson = findPersonById(id);
 
         for (String groupID : foundPerson.getGroups()){
-            System.out.println("ID: " + groupID);
-            System.out.println("ID from old test: " + groupId); //groupId är Namn (Ankeborgare) från integration test men id från det andra testet...gör om nåt med DTO return
-            if(groupId.length() == 36) {
+            if(groupId.length() == 36 && groupId.contains("-")) { //groupId.length() == 36 or groupId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")
                 foundPerson.removeGroup(groupID);
                 return personRepository.save(foundPerson);
             }else if(groupRemote.getNameById(groupID).equals(groupId)) {
@@ -102,31 +87,6 @@ public class PersonService {
                 return personRepository.save(foundPerson);
             }
         }
-
-        /*
-        //if groupid equals a group in foundPersons groupList, remove it
-        for (String groupID : foundPerson.getGroups()){
-            System.out.println("ID: " + groupID);
-            System.out.println("ID from old test: " + groupId); //groupId är Namn (Ankeborgare) från integration test men id från det andra testet...gör om nåt med DTO return
-
-            //work for integration test since I get the name as param
-            if(groupRemote.getNameById(groupID).equals(groupId)){
-                foundPerson.removeGroup(groupID);
-                return personRepository.save(foundPerson);
-            }
-
-            //work for original test since I get the groupId as param
-            if(groupID.equals(groupId)){
-                foundPerson.removeGroup(groupID);
-                return personRepository.save(foundPerson);
-            }
-            //System.out.println(groupRemote.getNameById(groupID)); //här blir det null i 'vanliga' testet
-            //foundPerson.removeGroup(groupID); //grönt test men här skulle alla grupper tas bort men check returnerar null
-
-
-        };*/
-
         return foundPerson;
-
     }
 }

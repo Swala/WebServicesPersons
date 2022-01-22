@@ -1,6 +1,5 @@
 package com.example.personsrest.domain;
 
-import com.example.personsrest.remote.GroupRemote;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,7 @@ public class PersonEntity implements Person {
     private int age;
     private String city;
     private boolean isActive;
-    private List<String> groups; //ska lista namn på grupper som personen tillhör
+    private List<String> groups; //contains groupId
 
 
     public PersonEntity(String name, String city, int age) {
@@ -32,18 +31,13 @@ public class PersonEntity implements Person {
 
     }
 
-
     @Override
     public void addGroup(String groupId) {
-        System.out.println("addGroup " + groupId);
-
         groups.add(groupId);
     }
 
     @Override
     public void removeGroup(String groupId) {
-        System.out.println("from PersonEntity " + groupId);
-
         groups.remove(groupId);
     }
 }

@@ -2,24 +2,16 @@ package com.example.personsrest;
 
 import com.example.personsrest.domain.CreatePerson;
 import com.example.personsrest.domain.Person;
-import com.example.personsrest.domain.PersonEntity;
 import com.example.personsrest.domain.UpdatePerson;
 import com.example.personsrest.remote.GroupRemote;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @RestController
@@ -30,15 +22,13 @@ public class PersonController {
     GroupRemote groupRemote; //vill inte ha detta här...
 
     @GetMapping()
-    public List<PersonDTO> all(@RequestParam(required = false) String search){
+    public List<PersonDTO> all(@RequestParam(required = false) String search){ //optional params for search functionality
 
-        //System.out.println("hej från All-metoden");
         if(search != null) {
-            System.out.println(search);
+            //System.out.println(search);
             return personService.findAllByNameOrCityContaining(search, 0, 10)
                     .map(this::toDTO).stream().collect(Collectors.toList());
         }else {
-
             return personService.all().stream().map(this::toDTO).collect(Collectors.toList());
         }
     }
@@ -54,14 +44,16 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity<PersonDTO> createNewPerson(@RequestBody CreatePerson createPerson){ //change to ResponseEntity?
+    public ResponseEntity<PersonDTO> createNewPerson(@RequestBody CreatePerson createPerson){
         //System.out.println(createPerson.getName());
-        return ResponseEntity.ok(toDTO(personService.createPerson(
-                createPerson.getName(),
-                createPerson.getCity(),
-                createPerson.getAge()
-        )));
-
+        try {
+            return ResponseEntity.ok(toDTO(personService.createPerson(
+                    createPerson.getName(),
+                    createPerson.getCity(),
+                    createPerson.getAge())));
+        }catch(Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")
@@ -87,7 +79,6 @@ public class PersonController {
     @PutMapping("/{id}/addGroup/{groupName}")
     public ResponseEntity<PersonDTO> addGroup(@PathVariable("id") String id,@PathVariable("groupName") String groupName){
         try{
-            //System.out.println("from controller" + groupName);
             return ResponseEntity.ok(toDTO(personService.addGroup(id, groupName)));
 
         }catch (PersonNotFoundException e){
@@ -95,10 +86,10 @@ public class PersonController {
         }
     }
 
-    @DeleteMapping("/{id}/removeGroup/{groupId}") //ändrat från groupname till id
-    public ResponseEntity<PersonDTO> removeGroupFromPerson(@PathVariable("id") String id, @PathVariable("groupId") String groupId) throws PersonNotFoundException {
+    @DeleteMapping("/{id}/removeGroup/{groupId}") //or groupName...
+    public ResponseEntity<PersonDTO> removeGroupFromPerson(@PathVariable("id") String id, @PathVariable("groupId") String groupId) {
         try{
-            return ResponseEntity.ok(toDTO(personService.removeGroup(id, groupId))); //måste ändra getGroups, via GroupRemote?
+            return ResponseEntity.ok(toDTO(personService.removeGroup(id, groupId)));
 
         }catch (PersonNotFoundException e){
             return ResponseEntity.notFound().build();
@@ -127,6 +118,8 @@ public class PersonController {
             this.age = age;
             this.groups = groups;
         }
+
+        //add method getGroups?? should handle groupId to name in service
 
     }
 

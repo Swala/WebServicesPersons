@@ -10,33 +10,26 @@ import java.util.stream.Collectors;
 
 public class PersonRepositoryImpl implements PersonRepository {
 
-    HashMap<String, Person> persons = new HashMap<>(); //ID om key?
+    HashMap<String, Person> persons = new HashMap<>(); //Key = ID
 
     @Override
     public Optional<Person> findById(String id) {
-        Optional<Person> optionalPerson = Optional.ofNullable(persons.get(id));
-        return optionalPerson;
+        return Optional.ofNullable(persons.get(id));
     }
 
     @Override
     public List<Person> findAll() {
-        List<Person> personsList = new ArrayList<Person>(persons.values());
-        return personsList;
+        return new ArrayList<>(persons.values());
     }
 
     @Override
     public Page<Person> findAllByNameContainingOrCityContaining(String name, String city, Pageable pageable) {
-
-        System.out.println(persons.size());
         List<Person>personList = findAll()
                 .stream()
-                .filter(entry -> entry.getName().contains(name) || entry.getCity().contains(city))
+                .filter(entry -> entry.getName().contains(name) || entry.getCity().contains(city)) //&&?
                 .collect(Collectors.toList());
 
-
-        Page<Person> page = new PageImpl<>(personList, pageable, pageable.getPageNumber());
-
-        return page;
+        return new PageImpl<>(personList, pageable, pageable.getPageNumber());
     }
 
     @Override

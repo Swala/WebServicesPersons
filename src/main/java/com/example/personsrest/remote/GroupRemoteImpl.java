@@ -8,9 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.servlet.function.ServerResponse;
-import reactor.core.publisher.Mono;
-
 import java.util.HashMap;
 
 public class GroupRemoteImpl implements GroupRemote{
@@ -19,7 +16,7 @@ public class GroupRemoteImpl implements GroupRemote{
 
     WebClient webClient;
 
-    private KeyCloakToken token;
+    private final KeyCloakToken token;
     private final String BASE_URL = "https://groups.edu.sensera.se/api/groups";
 
     public GroupRemoteImpl() {
@@ -30,7 +27,6 @@ public class GroupRemoteImpl implements GroupRemote{
 
 
     public Group get(String id) {
-        //System.out.println("from get in groupremote " + id); //ska vara id, inte namn
         return webClient.get().uri(BASE_URL + "/"+id)
                 .header("Authorization", "Bearer " + token.accessToken)
                 .header(HttpHeaders.CONTENT_TYPE , MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +38,6 @@ public class GroupRemoteImpl implements GroupRemote{
 
 
     public Group create(CreateGroup createGroup) {
-        //System.out.println("token: " + token.accessToken);
         return webClient.post().uri(BASE_URL)
                 .header("Authorization", "Bearer " + token.accessToken)
                 .header(HttpHeaders.CONTENT_TYPE , MediaType.APPLICATION_JSON_VALUE)
@@ -66,18 +61,14 @@ public class GroupRemoteImpl implements GroupRemote{
     public String createGroup(String name) {
         Group group = create(new CreateGroup(name));
         groups.put(group.getId(), group);
-        //System.out.println("from groupRemote " + group.getName());
 
         return group.getId();
     }
 
     @Override
-    public String removeGroup(String name) { //ska denna returnera ID??
-
+    public String removeGroup(String name) {
         return null;
     }
-
-
 
     @Value
     public static class Group {
