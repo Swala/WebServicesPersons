@@ -22,11 +22,13 @@ public class PersonController {
     GroupRemote groupRemote; //vill inte ha detta här...
 
     @GetMapping()
-    public List<PersonDTO> all(@RequestParam(required = false) String search){ //optional params for search functionality
+    public List<PersonDTO> all(@RequestParam(name="search", required = false) String search,
+                                @RequestParam(name="pagenumber", required = false) Integer pageNumber,
+                               @RequestParam(name="pagesize", required = false) Integer pagesize){ //add pagenumber and size
 
         if(search != null) {
             //System.out.println(search);
-            return personService.findAllByNameOrCityContaining(search, 0, 10)
+            return personService.findAllByNameOrCityContaining(search, pageNumber, pagesize)
                     .map(this::toDTO).stream().collect(Collectors.toList());
         }else {
             return personService.all().stream().map(this::toDTO).collect(Collectors.toList());

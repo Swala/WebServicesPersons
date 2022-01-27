@@ -74,6 +74,7 @@ public class PersonService {
     }
 
 
+    //separate method to removeByName
     public Person removeGroup(String id, String groupId) throws PersonNotFoundException {
 
         Person foundPerson = findPersonById(id);
